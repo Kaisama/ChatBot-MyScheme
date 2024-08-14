@@ -1,3 +1,9 @@
+export const categories=['general','other backward class','Particularly Vulnerable Tribal Group','Scheduled Caste','Scheduled Tribe'];
+
+export const genders=['male','female','transgender'];
+
+export const areas=['urban','rural'];
+
 export const districts = [
     'almora', 'bageshwar', 'chamoli', 'champawat', 'dehradun', 'haridwar', 'nainital',
     'pauri garhwal', 'pithoragarh', 'rudraprayag', 'tehri garhwal', 'udham singh nagar', 'uttarkashi'
