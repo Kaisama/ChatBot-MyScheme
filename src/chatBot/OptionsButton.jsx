@@ -1,16 +1,15 @@
 import { skillDevelopmentSchemes } from "./data";
 
 const OptionsButton = (props) => {
-  const options = Object.keys(skillDevelopmentSchemes);
 
   return (
     <div>
-      {options.map((option) => (
+      {skillDevelopmentSchemes.map((scheme) => (
         <button
-          key={option}
-          onClick={() => props.actionProvider.handleSchemeSelection(option)}
+          key={scheme.heading}
+          onClick={() => props.actionProvider.handleSchemeSelection(scheme.heading)}
         >
-          {option}
+          {scheme.heading}
         </button>
       ))}
     </div>

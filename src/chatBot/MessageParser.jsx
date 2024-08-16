@@ -32,9 +32,7 @@ const MessageParser = ({ children, actions, state }) => {
       actions.handlePenuryCheck(message);
     } else if (children.props.state.askingForAnnualIncome) {
       actions.handleAnnualIncome(message);
-    } else if (children.props.state.askingForFinalResult) {
-      actions.handleFinalResult(message);
-    }
+    } 
   };
 
   return (

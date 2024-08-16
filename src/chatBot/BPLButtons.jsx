@@ -2,8 +2,8 @@
 const BPLButtons = ({actionProvider}) => {
   return (
     <div>
-        <button onClick={()=>actionProvider.handlePenuryCheck(true)}>Yes</button>
-        <button onClick={()=>actionProvider.handlePenuryCheck(false)}>No</button>
+        <button onClick={()=>actionProvider.handleBPLCheck(true)}>Yes</button>
+        <button onClick={()=>actionProvider.handleBPLCheck(false)}>No</button>
     </div>
   )
 }
