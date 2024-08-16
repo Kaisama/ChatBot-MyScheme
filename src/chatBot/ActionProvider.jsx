@@ -140,36 +140,81 @@ const ActionProvider = ({ createChatBotMessage, setState, children }) => {
     }
   };
 
-  const handleDifferntialCheck = (isDisabled) => {
-    if (isDisabled) {
+  const handleDifferntialCheck = (isDisabled, input) => {
+    console.log("handleDifferntialCheck - isDisabled, input:", isDisabled, input);
+    if (typeof isDisabled === 'string' && input === undefined) {
+      input = isDisabled;
+      isDisabled = null;
+    }
+    
+    const normalizedInput = input ? input.trim().toLowerCase() : '';
+  
+    if (normalizedInput === 'yes' || isDisabled === true) {
       const message = createChatBotMessage('What is your differently abled percentage?');
       updateState(message);
-      setState((prev) => ({
-        ...prev,
+      setState((prev)=>{
+        const newState={
+          ...prev,
+          askingForDifferent: false,
+          askingForDifferentPercentage: true
+        }
+        return newState
+      })
+    } else if (normalizedInput === 'no' || isDisabled === false) {
+      const message = createChatBotMessage('Do you belong to minority?', {
+        widget: 'MinorityButtons'
+      });
+      updateState(message);
+      setState((prev)=>{
+        const newState={
+          ...prev,
         askingForDifferent: false,
-        askingForDifferentPercentage: true
-      }));
+          askingForMinority: true
+        }
+        return newState
+      })
     } else {
-      const message = createChatBotMessage('Do you belong to minority?',{
-        widget:'MinorityButtons'
+      console.log("handleDifferntialCheck - No condition met, invalid input");
+      const message = createChatBotMessage('Please enter valid details (yes or no).');
+      updateState(message);
+    }
+  }
+
+  const handleMinorityCheck = (isMinor, input) => {
+    console.log("handleMinorityCheck - isMinor, input:", isMinor, input);
+  
+    if (typeof isMinor === 'string' && input === undefined) {
+      input = isMinor;
+      isMinor = null;
+    }
+  
+    const normalizedInput = input ? input.trim().toLowerCase() : '';
+  
+    if (normalizedInput === 'yes' || isMinor === true) {
+      const message = createChatBotMessage('Are you a student?', {
+        widget: 'StudentButton'
       });
       updateState(message);
       setState((prev) => ({
         ...prev,
-        askingForDifferent: false,
-        askingForMinority: true
+        askingForMinority: false,
+        askingForStudent: true,
       }));
+    } else if (normalizedInput === 'no' || isMinor === false) {
+      const message = createChatBotMessage('Understood. Let\'s continue with the next question.');
+      updateState(message);
+      setState((prev) => ({
+        ...prev,
+        askingForMinority: false,
+        askingForStudent: true,
+      }));
+      setTimeout(handleBPLCheck, 500); 
+    } else {
+      const message = createChatBotMessage('Please click on the button above or enter yes/no.');
+      updateState(message);
     }
   };
-
-  const handleMinorityCheck=(isMinor)=>{
-       if(isMinor){
-        handleStudentCheck()
-       }
-       else{
-        handleStudentCheck();
-       }
-  }
+  
 
   const handleDiffPercentage = (percentage) => {
     const numPercentage = Number(percentage);
@@ -193,6 +238,11 @@ const ActionProvider = ({ createChatBotMessage, setState, children }) => {
     if (isStudent) {
       const message = createChatBotMessage("Great! We'll consider student-specific schemes for you.");
       updateState(message);
+      setState((prev) => ({
+        ...prev,
+        askingForStudent: false,
+        askingForBPL: true
+      }));
     } else {
       const message = createChatBotMessage("Understood. Let's continue with the next question.");
       updateState(message);
@@ -212,33 +262,43 @@ const ActionProvider = ({ createChatBotMessage, setState, children }) => {
     updateState(message);
     setState((prev) => ({
       ...prev,
-      askingForBPL: false,
-      askingForPenury: true,
+      askingForBPL: true,
+      askingForPenury: false,
     }));
   };
 
-  const handlePenuryCheck = (isBpl) => {
-    if (isBpl) {
-      const message = createChatBotMessage("Are you in any of the following condition - Destitute / Penury / Extreme Hardship / Distress", {
-        widget: "Penury"
-      });
-      updateState(message);
-      setState((prev) => ({
-        ...prev,
-        askingForPenury: false,
-        askingForFinalResult: true,
-      }));
-    } else {
-      const message = createChatBotMessage("What is your family's annual income?");
-      updateState(message);
-      setState((prev) => ({
-        ...prev,
-        askingForPenury: false,
-        askingForAnnualIncome: true,
-      }));
+  const handlePenuryCheck = (isBpl,input) => {
+    console.log("handleMinorityCheck - isMinor, input:", isBpl, input);
+  
+    if (typeof isBpl === 'string' && input === undefined) {
+      input = isBpl;
+      isBpl = null;
     }
-  };
+    const normalizedInput = input ? input.trim().toLowerCase() : '';
 
+  if (normalizedInput === 'yes' || isBpl === true) {
+    const message = createChatBotMessage("Are you in any of the following conditions - Destitute / Penury / Extreme Hardship / Distress", {
+      widget: "Penury"
+    });
+    updateState(message);
+    setState((prev) => ({
+      ...prev,
+      askingForPenury: false,
+      askingForFinalResult: true,
+    }));
+  } else if (normalizedInput === 'no' || isBpl === false) {
+    const message = createChatBotMessage("What is your family's annual income?");
+    updateState(message);
+    setState((prev) => ({
+      ...prev,
+      askingForPenury: false,
+      askingForAnnualIncome: true,
+    }));
+  } else {
+    const message = createChatBotMessage("Sorry, I didn't understand that. Please respond with yes/no or true/false.");
+    updateState(message);
+  }
+};
   const handleAnnualIncome = (income) => {
     const numIncome = Number(income);
     if (isNaN(numIncome) || numIncome < 0) {
@@ -246,13 +306,14 @@ const ActionProvider = ({ createChatBotMessage, setState, children }) => {
       updateState(message);
     } else {
       const message = createChatBotMessage("Based on your annual income, here are the available schemes:", {
-      widget: 'optionsButton'})
+        widget: 'optionsButton'
+      });
       updateState(message);
-    setState((prev) => ({
-      ...prev,
-      askingForAnnualIncome: false,
-      showingOptions: true,
-    }));
+      setState((prev) => ({
+        ...prev,
+        askingForAnnualIncome: false,
+        showingOptions: true,
+      }));
     }
   };
 

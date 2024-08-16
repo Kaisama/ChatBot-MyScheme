@@ -1,4 +1,4 @@
-export const categories=['general','other backward class','Particularly Vulnerable Tribal Group','Scheduled Caste','Scheduled Tribe'];
+export const categories=['general','other backward class','Scheduled Caste','Scheduled Tribe'];
 
 export const genders=['male','female','transgender'];
 

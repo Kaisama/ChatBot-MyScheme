@@ -23,7 +23,7 @@ const MessageParser = ({ children, actions, state }) => {
     } else if (children.props.state.askingForDifferentPercentage) {
       actions.handleDiffPercentage(message);
     } else if (children.props.state.askingForMinority) {
-      actions.handleDifferntialCheck(message);
+      actions.handleMinorityCheck(message);
     } else if (children.props.state.askingForStudent) {
       actions.handleStudentCheck(message);
     } else if (children.props.state.askingForBPL) {
